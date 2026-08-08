@@ -1,10 +1,8 @@
-import os
 import pymysql.cursors
-from dotenv import load_dotenv
 
-load_dotenv()
-
-self.connection = pymysql.connect(
+class MySQLConnection:
+    def __init__(self, db):
+        self.connection = pymysql.connect(
             host='altaria.proxy.rlwy.net',
             user='root',
             password='gxbKiKMmtvTInKuCtDUCFDPoWEwuEeML',
