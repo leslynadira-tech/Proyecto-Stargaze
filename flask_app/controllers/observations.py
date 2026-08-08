@@ -5,13 +5,16 @@ from flask_app.models.observation import Observation
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
-        return redirect('/')
+        flash("Debes iniciar sesión para acceder a esta página.")
+        return redirect('/') 
+    
     observations = Observation.get_all(session['user_id'])
     return render_template('dashboard.html', observations=observations)
 
 @app.route('/create_observation', methods=['POST'])
 def create_observation():
     if 'user_id' not in session:
+        flash("Debes iniciar sesión para acceder a esta página.")
         return redirect('/')
     if not Observation.validate_observation(request.form):
         return redirect('/dashboard')
@@ -29,9 +32,11 @@ def create_observation():
 @app.route('/editar/<int:id>')
 def edit_observation(id):
     if 'user_id' not in session:
+        flash("Debes iniciar sesión para acceder a esta página.")
         return redirect('/')
     obs = Observation.get_by_id({"id": id})
     if not obs:
+        flash("Observación no encontrada.")
         return redirect('/dashboard')
     # Bonus: Proteger edición por URL
     if obs.user_id != session['user_id']:
@@ -43,10 +48,12 @@ def edit_observation(id):
 @app.route('/update_observation/<int:id>', methods=['POST'])
 def update_observation(id):
     if 'user_id' not in session:
+        flash("Debes iniciar sesión para acceder a esta página.")
         return redirect('/')
         
     obs = Observation.get_by_id({"id": id})
     if not obs or obs.user_id != session['user_id']:
+        flash("Observación no encontrada.")
         return redirect('/dashboard')
         
     if not Observation.validate_observation(request.form, is_edit=True, current_id=id):
@@ -65,6 +72,7 @@ def update_observation(id):
 @app.route('/delete/<int:id>')
 def delete_observation(id):
     if 'user_id' not in session:
+        flash("Debes iniciar sesión para acceder a esta página.")
         return redirect('/')
     obs = Observation.get_by_id({"id": id})
     if obs and obs.user_id == session['user_id']:
@@ -74,6 +82,7 @@ def delete_observation(id):
 @app.route('/like/<int:id>')
 def like_observation(id):
     if 'user_id' not in session:
+        flash("Debes iniciar sesión para acceder a esta página.")
         return redirect('/')
     data = {
         "user_id": session['user_id'],
