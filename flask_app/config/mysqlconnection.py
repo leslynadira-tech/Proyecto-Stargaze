@@ -10,7 +10,7 @@ class MySQLConnection:
             host=os.environ.get('DB_HOST', 'localhost'),
             port=int(os.environ.get('DB_PORT', 3306)),
             user=os.environ.get('DB_USER', 'root'),
-            password="204152748",
+            password="root", # tu clave aqui 
             db=db,
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor,
