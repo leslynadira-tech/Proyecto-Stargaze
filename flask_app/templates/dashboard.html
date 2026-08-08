@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Stargaze - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <h1>Bienvenid@, {{ session['user_name'] }}</h1>
+        <nav><a href="/logout" class="btn btn-secondary">Cerrar Sesión</a></nav>
+    </header>
+
+    <main class="container">
+        <section class="auth-box" style="margin-bottom: 30px;">
+            <h3>Nueva publicación</h3>
+            <form action="/create_observation" method="POST">
+                <div class="form-group"><input type="text" name="name" placeholder="Nombre de Estrella/Constelación"></div>
+                <div class="form-group"><input type="date" name="date"></div>
+                <div class="form-group"><input type="text" name="location" placeholder="Ej. Antofagasta"></div>
+                <div class="form-group"><textarea name="description" placeholder="Descripción del encuentro"></textarea></div>
+                <button type="submit" class="btn">Compartir</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Observaciones Registradas</h2>
+            {% for obs in observations %}
+            <article class="obs-card">
+                <header class="obs-header">
+                    <h3>{{ obs.name }}</h3>
+                    {% if obs.user_id == session['user_id'] %}
+                    <nav>
+                        <a href="/editar/{{ obs.id }}" class="btn btn-secondary">Editar</a>
+                        <a href="/delete/{{ obs.id }}" class="btn btn-danger">Borrar</a>
+                    </nav>
+                    {% endif %}
+                </header>
+                <p><strong>Autor:</strong> {{ obs.creator }} | <strong>Fecha:</strong> {{ obs.date }} | <strong>Lugar:</strong> {{ obs.location }}</p>
+                <p>{{ obs.description }}</p>
+                <footer class="likes-bar">
+                    <p>Me gusta: {{ obs.likes_count }}</p>
+                    {% if obs.liked_by_current == 0 %}
+                        <a href="/like/{{ obs.id }}" class="btn">Me gusta</a>
+                    {% endif %}
+                </footer>
+            </article>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html> 
